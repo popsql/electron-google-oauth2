@@ -17,6 +17,11 @@
     global-agent "^2.0.2"
     global-tunnel-ng "^2.7.1"
 
+"@electron/remote@^2.0.9":
+  version "2.0.9"
+  resolved "https://registry.yarnpkg.com/@electron/remote/-/remote-2.0.9.tgz#092ff085407bc907f45b89a72c36faa773ccf2d9"
+  integrity sha512-LR0W0ID6WAKHaSs0x5LX9aiG+5pFBNAJL6eQAJfGkCuZPUa6nZz+czZLdlTDETG45CgF/0raSvCtYOYUpr6c+A==
+
 "@sindresorhus/is@^0.14.0":
   version "0.14.0"
   resolved "https://registry.yarnpkg.com/@sindresorhus/is/-/is-0.14.0.tgz#9fb3a3cf3132328151f353de4632e01e52102bea"
@@ -29,10 +34,10 @@
   dependencies:
     defer-to-connect "^1.0.1"
 
-"@types/node@^12.0.12":
-  version "12.12.26"
-  resolved "https://registry.yarnpkg.com/@types/node/-/node-12.12.26.tgz#213e153babac0ed169d44a6d919501e68f59dea9"
-  integrity sha512-UmUm94/QZvU5xLcUlNR8hA7Ac+fGpO1EG/a8bcWVz0P0LqtxFmun9Y2bbtuckwGboWJIT70DoWq1r3hb56n3DA==
+"@types/node@^14.6.2":
+  version "14.18.43"
+  resolved "https://registry.yarnpkg.com/@types/node/-/node-14.18.43.tgz#679e000d9f1d914132ea295b4a1ffdf20370ec49"
+  integrity sha512-n3eFEaoem0WNwLux+k272P0+aq++5o05bA9CfiwKPdYPB5ZambWKdWoeHy7/OJiizMhzg27NLaZ6uzjLTzXceQ==
 
 abort-controller@^3.0.0:
   version "3.0.0"
@@ -164,13 +169,13 @@ ecdsa-sig-formatter@1.0.11:
   dependencies:
     safe-buffer "^5.0.1"
 
-electron@^7.1.11:
-  version "7.1.11"
-  resolved "https://registry.yarnpkg.com/electron/-/electron-7.1.11.tgz#3a95e35804af083d58b590513afea5e2290c4b66"
-  integrity sha512-YDXfnovKY+8iZ5ISQh1kRqYIRKbpOSxGXCx2WVxPFPutEQ7Q/Xzr3h4GePEY25/NXMytMfhKaAZAYjtWUm3r9Q==
+electron@^13:
+  version "13.6.9"
+  resolved "https://registry.yarnpkg.com/electron/-/electron-13.6.9.tgz#7bd83cc1662ceaaa09dcd132a7b507cec888b028"
+  integrity sha512-Es/sBy85NIuqsO9MW41PUCpwIkeinlTQ7g0ainfnmRAM2rmog3GBxVCaoV5dzEjwTF7TKG1Yr/E7Z3qHmlfWAg==
   dependencies:
     "@electron/get" "^1.0.1"
-    "@types/node" "^12.0.12"
+    "@types/node" "^14.6.2"
     extract-zip "^1.0.3"
 
 encodeurl@^1.0.2:
@@ -663,10 +668,10 @@ typedarray@^0.0.6:
   version "0.0.6"
   resolved "https://registry.yarnpkg.com/typedarray/-/typedarray-0.0.6.tgz#867ac74e3864187b1d3d47d996a78ec5c8830777"
 
-typescript@^3.7.5:
-  version "3.7.5"
-  resolved "https://registry.yarnpkg.com/typescript/-/typescript-3.7.5.tgz#0692e21f65fd4108b9330238aac11dd2e177a1ae"
-  integrity sha512-/P5lkRXkWHNAbcJIiHPfRoKqyd7bsyCma1hZNUGfn20qm64T6ZBlrzprymeu918H+mB/0rIg2gGK/BXkhhYgBw==
+typescript@^3.8.3:
+  version "3.9.10"
+  resolved "https://registry.yarnpkg.com/typescript/-/typescript-3.9.10.tgz#70f3910ac7a51ed6bef79da7800690b19bf778b8"
+  integrity sha512-w6fIxVE/H1PkLKcCPsFqKE7Kv7QUwhU8qQY2MueZXWx5cPZdwFupLgKK3vntcK98BtNHZtAF4LA/yl2a7k8R6Q==
 
 universalify@^0.1.0:
   version "0.1.2"
