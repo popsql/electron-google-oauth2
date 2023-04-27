@@ -6,12 +6,16 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [Unreleased]
 
+## [2.2.1] - 2023-04-27
+### Fixed
+- Remove `@electron/remote` as peerDependency as it's not required if using old version of `electron`
+
 ## [2.2.0] - 2023-04-27
-# Added
+### Added
 - Fallback to using `@electron/remote` if `electron.remote` does not exist
 - Add `dispose` method to ensure server object is closed
 
-# Changed
+### Changed
 - Dynamically import `BrowserWindow` if needed to avoid require usage
 
 ## [2.1.0] - 2020-02-04
