@@ -1,19 +1,19 @@
-# @getstation/electron-google-oauth2
+# @popsql/electron-google-oauth2
 > Library that manages Google OAuth2 authentication for your [Electron](http://electron.atom.io) app.
 
 ## Install
 ```
 // npm
-$ npm install --save @getstation/electron-google-oauth2
+$ npm install --save @popsql/electron-google-oauth2
 // yarn
-$ yarn add @getstation/electron-google-oauth2
+$ yarn add @popsql/electron-google-oauth2
 ```
 
 ## Usage
 
 ### Access Token
 ```typescript
-import ElectronGoogleOAuth2 from '@getstation/electron-google-oauth2';
+import ElectronGoogleOAuth2 from '@popsql/electron-google-oauth2';
 
 app.on('ready', () => {
   const myApiOauth = new ElectronGoogleOAuth2(
@@ -31,7 +31,7 @@ app.on('ready', () => {
 
 ### Refresh Token
 ```typescript
-import ElectronGoogleOAuth2 from '@getstation/electron-google-oauth2';
+import ElectronGoogleOAuth2 from '@popsql/electron-google-oauth2';
 
 app.on('ready', () => {
   const myApiOauth = new ElectronGoogleOAuth2(
@@ -39,9 +39,9 @@ app.on('ready', () => {
     'CLIENT_SECRET',
     ['https://www.googleapis.com/auth/drive.metadata.readonly']
   );
-  
+
   const refreshToken = \\ Read the saved refresh token
-  
+
   if(refreshToken) {
     myApiOauth.setTokens({ refresh_token: refreshToken });
   } else {
@@ -67,7 +67,7 @@ const myApiOauth = new ElectronGoogleOAuth2(
 ### Requires with plain JavaScript
 
 ```js
-const ElectronGoogleOAuth2 = require('@getstation/electron-google-oauth2').default;
+const ElectronGoogleOAuth2 = require('@popsql/electron-google-oauth2').default;
 new ElectronGoogleOAuth2(CLIENT_ID, CLIENT_SECRET, SCOPES_LIST);
 ```
 
