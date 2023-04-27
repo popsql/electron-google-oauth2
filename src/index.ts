@@ -8,7 +8,7 @@ import { stringify } from 'querystring';
 import * as url from 'url';
 import LoopbackRedirectServer from './LoopbackRedirectServer';
 
-const BW: typeof BrowserWindow = process.type === 'renderer' ? require('@electron/remote').BrowserWindow : require('electron').BrowserWindow;
+let BW: typeof BrowserWindow | undefined;
 
 export class UserClosedWindowError extends Error {
   constructor() {
@@ -145,6 +145,18 @@ class ElectronGoogleOAuth2 extends EventEmitter {
 
     if (this.options.refocusAfterSuccess) {
       // refocus on the window
+      if (!BW) {
+        if (process.type === 'renderer') {
+          let { remote } = await import('electron');
+          if (!remote) {
+            remote = await import('@electron/remote');
+          }
+          BW = remote.BrowserWindow;
+        } else {
+          BW = (await import('electron')).BrowserWindow;
+        }
+      }
+
       BW.getAllWindows().filter(w => w.isVisible()).forEach(w => w.show());
     }
 
