@@ -29,8 +29,7 @@
     "google-auth-library": "^5.9.2"
   },
   "peerDependencies": {
-    "@electron/remote": "^2",
-    "electron": ">=13"
+    "electron": "*"
   },
   "engines": {
     "node": ">= 8.0"
