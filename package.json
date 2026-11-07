@@ -12,7 +12,8 @@
   },
   "scripts": {
     "build": "tsc -p .",
-    "prepublishOnly": "yarn run build"
+    "prepublishOnly": "yarn run build",
+    "test": "yarn run build && node --require ./tests/electron-mock.cjs --test tests/*.test.js"
   },
   "keywords": [
     "electron",
