@@ -4,8 +4,12 @@
   "description": "A Google OAuth2 module for your Electron app.",
   "license": "MIT",
   "repository": "popsql/electron-google-oauth2",
-  "main": "./lib/index",
-  "types": "./lib/index",
+  "main": "./lib/index.js",
+  "types": "./lib/index.d.ts",
+  "files": [
+    "CHANGELOG.md",
+    "lib"
+  ],
   "author": {
     "name": "Joël Charles",
     "email": "joel@getstation.com"

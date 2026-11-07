@@ -26,6 +26,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 ### Changed
 - Import `Credentials` from the root of `google-auth-library` instead of a deep path.
 - TypeScript 6, `@types/node` 24 and Electron 45 for the build.
+- `main` and `types` name the full file paths. A `files` list replaces `.npmignore`,
+  so the package ships only `lib/`, the changelog, the readme and the license.
 
 ### Fixed
 - Remove `gtoken`, `google-p12-pem` and `node-forge` 0.10, which had high advisories.
