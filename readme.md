@@ -9,6 +9,10 @@ $ npm install --save @popsql/electron-google-oauth2
 $ yarn add @popsql/electron-google-oauth2
 ```
 
+### Requirements
+Node.js 22 or later. In Electron, use a version that bundles Node.js 22 or later
+(Electron 37 and later). The package ships CommonJS and works with `require`.
+
 ## Usage
 
 ### Access Token

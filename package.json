@@ -1,6 +1,6 @@
 {
   "name": "@popsql/electron-google-oauth2",
-  "version": "2.2.1",
+  "version": "3.0.0",
   "description": "A Google OAuth2 module for your Electron app.",
   "license": "MIT",
   "repository": "popsql/electron-google-oauth2",
@@ -34,7 +34,7 @@
     "electron": "*"
   },
   "engines": {
-    "node": ">= 8.0"
+    "node": ">=22"
   },
   "bugs": {
     "url": "https://github.com/popsql/electron-google-oauth2/issues"
