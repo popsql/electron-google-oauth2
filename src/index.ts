@@ -2,7 +2,7 @@
 import { shell } from 'electron';
 import type { BrowserWindow } from 'electron';
 import { EventEmitter } from 'events';
-import { Credentials, OAuth2Client } from 'google-auth-library';
+import { Credentials, GenerateAuthUrlOpts, OAuth2Client } from 'google-auth-library';
 import { stringify } from 'querystring';
 import * as url from 'url';
 import LoopbackRedirectServer from './LoopbackRedirectServer';
@@ -32,6 +32,9 @@ export type ElectronGoogleOAuth2Options = {
   successRedirectURL: string,
   loopbackInterfaceRedirectionPort?: number,
   refocusAfterSuccess?: boolean,
+  // The Google `prompt` parameter: a space-delimited list of
+  // 'none', 'consent' and 'select_account'. Use 'consent' to always get a refresh token.
+  prompt?: string,
 };
 
 export const defaultElectronGoogleOAuth2Options: Required<
@@ -93,11 +96,16 @@ class ElectronGoogleOAuth2 extends EventEmitter {
    * @returns {string}
    */
   generateAuthUrl(forceAddSession: boolean = false) {
-    let url = this.oauth2Client.generateAuthUrl({
+    const authUrlOptions: GenerateAuthUrlOpts = {
       access_type: 'offline', // 'online' (default) or 'offline' (gets refresh_token)
       scope: this.scopes,
       redirect_uri: `http://127.0.0.1:${this.options.loopbackInterfaceRedirectionPort}/callback`
-    });
+    };
+    // Do not send an undefined prompt. The query string would get an empty `prompt=`.
+    if (this.options.prompt) {
+      authUrlOptions.prompt = this.options.prompt;
+    }
+    let url = this.oauth2Client.generateAuthUrl(authUrlOptions);
 
     if (forceAddSession) {
       const qs = stringify({ continue: url });

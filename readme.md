@@ -68,6 +68,7 @@ The fourth argument is an options object. `successRedirectURL` is required.
 | `successRedirectURL` | (required) | The page that the browser shows after Google sends back the code. |
 | `loopbackInterfaceRedirectionPort` | `42813` | The local port that gets the OAuth redirect. |
 | `refocusAfterSuccess` | `true` | Show the visible app windows again after sign-in. |
+| `prompt` | (none) | The Google [`prompt`](https://developers.google.com/identity/protocols/oauth2/web-server#creatingclient) parameter. A space-delimited list of `none`, `consent` and `select_account`. Use `consent` to always get a refresh token. |
 
 ### Requires with plain JavaScript
 

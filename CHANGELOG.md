@@ -19,6 +19,10 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
   throws a `TypeError` if the option is missing or empty.
 - `defaultElectronGoogleOAuth2Options` no longer has `successRedirectURL`.
 
+### Added
+- `options.prompt` sets the Google `prompt` parameter on the auth URL, for example
+  `consent` to always get a refresh token.
+
 ### Changed
 - Import `Credentials` from the root of `google-auth-library` instead of a deep path.
 - TypeScript 6, `@types/node` 24 and Electron 45 for the build.

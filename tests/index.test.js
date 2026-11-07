@@ -83,6 +83,20 @@ test('generateAuthUrl requests an offline code for the loopback redirect', () =>
   );
 });
 
+test('generateAuthUrl does not send a prompt by default', () => {
+  const client = createClient();
+  const authUrl = readAuthUrl(client.generateAuthUrl());
+
+  assert.equal(authUrl.searchParams.has('prompt'), false);
+});
+
+test('generateAuthUrl sends the configured prompt', () => {
+  const client = createClient(['scope-a'], { prompt: 'consent select_account' });
+  const authUrl = readAuthUrl(client.generateAuthUrl());
+
+  assert.equal(authUrl.searchParams.get('prompt'), 'consent select_account');
+});
+
 test('generateAuthUrl uses the configured loopback port', () => {
   const client = createClient(['scope-a'], { loopbackInterfaceRedirectionPort: 43211 });
   const authUrl = readAuthUrl(client.generateAuthUrl());
