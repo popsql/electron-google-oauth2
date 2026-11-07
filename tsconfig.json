@@ -3,21 +3,22 @@
     "allowJs": false,
     "declaration": true,
     "preserveConstEnums": true,
-    "noImplicitAny": true,
+    "strict": true,
     "noImplicitReturns": true,
-    "suppressImplicitAnyIndexErrors": true,
-    "strictNullChecks": true,
     "noUnusedLocals": true,
-    "noImplicitThis": true,
     "noUnusedParameters": true,
     "noEmitHelpers": false,
-    "module": "commonjs",
-    "moduleResolution": "node",
-    "target": "es2016",
+    "module": "node16",
+    "moduleResolution": "node16",
+    "target": "es2022",
+    "types": [
+      "node"
+    ],
     "outDir": "./lib",
+    "rootDir": "./src",
     "jsx": "react",
     "lib": [
-      "es2017",
+      "es2022",
       "dom"
     ]
   },

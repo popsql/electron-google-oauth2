@@ -2,11 +2,15 @@
 import { shell } from 'electron';
 import type { BrowserWindow } from 'electron';
 import { EventEmitter } from 'events';
-import { OAuth2Client } from 'google-auth-library';
-import { Credentials } from 'google-auth-library/build/src/auth/credentials';
+import { Credentials, OAuth2Client } from 'google-auth-library';
 import { stringify } from 'querystring';
 import * as url from 'url';
 import LoopbackRedirectServer from './LoopbackRedirectServer';
+
+// The shape of the removed `electron.remote` module.
+type RemoteModule = {
+  BrowserWindow: typeof BrowserWindow,
+};
 
 let BW: typeof BrowserWindow | undefined;
 
@@ -45,7 +49,7 @@ class ElectronGoogleOAuth2 extends EventEmitter {
 
   public oauth2Client: OAuth2Client;
   public scopes: string[];
-  protected server: LoopbackRedirectServer | null;
+  protected server: LoopbackRedirectServer | null = null;
   protected options: ElectronGoogleOAuth2Options;
 
   /**
@@ -147,11 +151,15 @@ class ElectronGoogleOAuth2 extends EventEmitter {
       // refocus on the window
       if (!BW) {
         if (process.type === 'renderer') {
-          let { remote } = await import('electron');
-          if (!remote) {
-            remote = await import('@electron/remote');
+          // Electron 14 removed the remote module. Older versions still have it.
+          const electronModule = await import('electron') as typeof import('electron') & {
+            remote?: RemoteModule,
+          };
+          if (electronModule.remote) {
+            BW = electronModule.remote.BrowserWindow;
+          } else {
+            BW = (await import('@electron/remote')).BrowserWindow;
           }
-          BW = remote.BrowserWindow;
         } else {
           BW = (await import('electron')).BrowserWindow;
         }

@@ -3,6 +3,11 @@
 // state fields to control the mock. The library under test gets the same
 // module object, so it uses the mock, not the real electron package.
 const Module = require('module');
+const { pathToFileURL } = require('url');
+
+// The library uses `import('electron')` when it refocuses the windows.
+// Loader hooks make that import get the mock too.
+Module.register('./electron-mock-loader.mjs', pathToFileURL(__filename));
 
 const state = {
   // Every URL passed to shell.openExternal, in order.
