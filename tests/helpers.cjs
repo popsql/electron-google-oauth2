@@ -96,11 +96,7 @@ function stubTokenEndpoint(client, responseBody = makeTokenResponse()) {
  * of google-auth-library that we support.
  */
 function parseTokenRequestBody(options) {
-  const body = options.data;
-  if (typeof body === 'string') {
-    return new URLSearchParams(body);
-  }
-  return new URLSearchParams(body);
+  return new URLSearchParams(options.data);
 }
 
 module.exports = {

@@ -1,7 +1,7 @@
 const assert = require('node:assert/strict');
 const test = require('node:test');
 
-const { FakeBrowserWindow, resetState, state } = require('./electron-mock.cjs');
+const { electronMock, FakeBrowserWindow, resetState, state } = require('./electron-mock.cjs');
 const ElectronGoogleOAuth2 = require('../lib/index.js').default;
 const { getFreePort, requestCallback, stubTokenEndpoint } = require('./helpers.cjs');
 
@@ -19,10 +19,17 @@ test('the renderer path takes BrowserWindow from the CommonJS remote module', as
   });
   stubTokenEndpoint(client);
   const originalProcessType = process.type;
+  const electronBrowserWindow = electronMock.BrowserWindow;
   process.type = 'renderer';
+  // Hide BrowserWindow on the electron mock. The renderer branch must get it
+  // from @electron/remote, not from require('electron').
+  delete electronMock.BrowserWindow;
 
   try {
-    state.windows = [new FakeBrowserWindow()];
+    const electronWindow = new FakeBrowserWindow();
+    const remoteWindow = new FakeBrowserWindow();
+    state.windows = [electronWindow];
+    state.remoteWindows = [remoteWindow];
     let browserDone;
     state.onOpenExternal = () => {
       browserDone = requestCallback(port, '/callback?code=auth-code');
@@ -33,8 +40,11 @@ test('the renderer path takes BrowserWindow from the CommonJS remote module', as
     await browserDone;
 
     assert.equal(tokens.access_token, 'access-token');
-    assert.equal(state.shownWindows, 1);
+    assert.equal(state.remoteLoads, 1);
+    assert.equal(remoteWindow.shownCount, 1);
+    assert.equal(electronWindow.shownCount, 0);
   } finally {
+    electronMock.BrowserWindow = electronBrowserWindow;
     process.type = originalProcessType;
   }
 });

@@ -1,13 +1,12 @@
 // The real @electron/remote re-exports its bindings with a loop over computed
-// property names. Node's ESM interop cannot see those names, so a native
-// import of that package exposes only its default export. This mock keeps the
-// same shape, to catch a build that uses a native import.
+// property names. This mock keeps the same shape. It also returns its own
+// window list, so a test can tell which module supplied BrowserWindow.
 const { state } = require('./electron-mock.cjs');
 
 const remoteBindings = {
   BrowserWindow: {
     getAllWindows() {
-      return state.windows;
+      return state.remoteWindows;
     },
   },
 };
