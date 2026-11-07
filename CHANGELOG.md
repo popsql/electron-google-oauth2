@@ -14,11 +14,6 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
   need Node.js 22 or later. In Electron, use a version that bundles Node.js 22 or
   later (Electron 37 and later).
 - The package still ships CommonJS in `lib/`.
-- The lazy `electron` loads emit a native `import()` now. TypeScript 6 with `module`
-  `node16` keeps the dynamic import. Version 2.2.1 emitted a `require()` wrapper.
-  A native import needs Electron 28 or later, which the Node.js 22 floor already
-  implies. Bundlers such as webpack rewrite the import, so bundled renderers do
-  not change.
 
 ### Changed
 - Import `Credentials` from the root of `google-auth-library` instead of a deep path.

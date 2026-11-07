@@ -152,16 +152,18 @@ class ElectronGoogleOAuth2 extends EventEmitter {
       if (!BW) {
         if (process.type === 'renderer') {
           // Electron 14 removed the remote module. Older versions still have it.
-          const electronModule = await import('electron') as typeof import('electron') & {
+          // Use require() for both modules. A native import() does not see the
+          // computed CommonJS exports of @electron/remote.
+          const electronModule = require('electron') as typeof import('electron') & {
             remote?: RemoteModule,
           };
           if (electronModule.remote) {
             BW = electronModule.remote.BrowserWindow;
           } else {
-            BW = (await import('@electron/remote')).BrowserWindow;
+            BW = (require('@electron/remote') as RemoteModule).BrowserWindow;
           }
         } else {
-          BW = (await import('electron')).BrowserWindow;
+          BW = (require('electron') as typeof import('electron')).BrowserWindow;
         }
       }
 
