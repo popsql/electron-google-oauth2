@@ -18,7 +18,7 @@ export type LoopbackRedirectServerOptions = {
 };
 
 export default class LoopbackRedirectServer {
-  private _server: http.Server;
+  private _server!: http.Server;
   private _maybeRedirection: Promise<string>;
 
   constructor({ port, successRedirectURL, callbackPath }: LoopbackRedirectServerOptions) {

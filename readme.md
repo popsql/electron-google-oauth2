@@ -9,6 +9,10 @@ $ npm install --save @popsql/electron-google-oauth2
 $ yarn add @popsql/electron-google-oauth2
 ```
 
+### Requirements
+Node.js 22 or later. In Electron, use a version that bundles Node.js 22 or later
+(Electron 37 and later). The package ships CommonJS and works with `require`.
+
 ## Usage
 
 ### Access Token
@@ -19,7 +23,8 @@ app.on('ready', () => {
   const myApiOauth = new ElectronGoogleOAuth2(
     'CLIENT_ID',
     'CLIENT_SECRET',
-    ['https://www.googleapis.com/auth/drive.metadata.readonly']
+    ['https://www.googleapis.com/auth/drive.metadata.readonly'],
+    { successRedirectURL: 'https://example.com/signed-in' },
   );
 
   myApiOauth.openAuthWindowAndGetTokens()
@@ -37,7 +42,8 @@ app.on('ready', () => {
   const myApiOauth = new ElectronGoogleOAuth2(
     'CLIENT_ID',
     'CLIENT_SECRET',
-    ['https://www.googleapis.com/auth/drive.metadata.readonly']
+    ['https://www.googleapis.com/auth/drive.metadata.readonly'],
+    { successRedirectURL: 'https://example.com/signed-in' },
   );
 
   const refreshToken = \\ Read the saved refresh token
@@ -54,21 +60,21 @@ app.on('ready', () => {
 });
 ```
 
-### Use custom successRedirectURL
-```js
-const myApiOauth = new ElectronGoogleOAuth2(
-  'CLIENT_ID',
-  'CLIENT_SECRET',
-  ['https://www.googleapis.com/auth/drive.metadata.readonly']
-  { successRedirectURL: 'https://google.com' },
-);
-```
+### Options
+The fourth argument is an options object. `successRedirectURL` is required.
+
+| Option | Default | Description |
+| --- | --- | --- |
+| `successRedirectURL` | (required) | The page that the browser shows after Google sends back the code. |
+| `loopbackInterfaceRedirectionPort` | `42813` | The local port that gets the OAuth redirect. |
+| `refocusAfterSuccess` | `true` | Show the visible app windows again after sign-in. |
+| `prompt` | (none) | The Google [`prompt`](https://developers.google.com/identity/protocols/oauth2/web-server#creatingclient) parameter. A space-delimited list of `none`, `consent` and `select_account`. Use `consent` to always get a refresh token. |
 
 ### Requires with plain JavaScript
 
 ```js
 const ElectronGoogleOAuth2 = require('@popsql/electron-google-oauth2').default;
-new ElectronGoogleOAuth2(CLIENT_ID, CLIENT_SECRET, SCOPES_LIST);
+new ElectronGoogleOAuth2(CLIENT_ID, CLIENT_SECRET, SCOPES_LIST, { successRedirectURL: SUCCESS_URL });
 ```
 
 ## License

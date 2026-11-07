@@ -2,11 +2,15 @@
 import { shell } from 'electron';
 import type { BrowserWindow } from 'electron';
 import { EventEmitter } from 'events';
-import { OAuth2Client } from 'google-auth-library';
-import { Credentials } from 'google-auth-library/build/src/auth/credentials';
+import { Credentials, GenerateAuthUrlOpts, OAuth2Client } from 'google-auth-library';
 import { stringify } from 'querystring';
 import * as url from 'url';
 import LoopbackRedirectServer from './LoopbackRedirectServer';
+
+// The shape of the removed `electron.remote` module.
+type RemoteModule = {
+  BrowserWindow: typeof BrowserWindow,
+};
 
 let BW: typeof BrowserWindow | undefined;
 
@@ -24,13 +28,18 @@ export class UserClosedWindowError extends Error {
  */
 
 export type ElectronGoogleOAuth2Options = {
+  // The loopback server sends the browser to this URL after it gets the code.
   successRedirectURL: string,
-  loopbackInterfaceRedirectionPort: number,
-  refocusAfterSuccess: boolean,
+  loopbackInterfaceRedirectionPort?: number,
+  refocusAfterSuccess?: boolean,
+  // The Google `prompt` parameter: a space-delimited list of
+  // 'none', 'consent' and 'select_account'. Use 'consent' to always get a refresh token.
+  prompt?: string,
 };
 
-export const defaultElectronGoogleOAuth2Options: ElectronGoogleOAuth2Options = {
-  successRedirectURL: 'https://getstation.com/app-login-success/',
+export const defaultElectronGoogleOAuth2Options: Required<
+  Pick<ElectronGoogleOAuth2Options, 'loopbackInterfaceRedirectionPort' | 'refocusAfterSuccess'>
+> = {
   // can't be randomized
   loopbackInterfaceRedirectionPort: 42813,
   refocusAfterSuccess: true,
@@ -45,23 +54,27 @@ class ElectronGoogleOAuth2 extends EventEmitter {
 
   public oauth2Client: OAuth2Client;
   public scopes: string[];
-  protected server: LoopbackRedirectServer | null;
-  protected options: ElectronGoogleOAuth2Options;
+  protected server: LoopbackRedirectServer | null = null;
+  protected options: ElectronGoogleOAuth2Options & typeof defaultElectronGoogleOAuth2Options;
 
   /**
    * Create a new instance of ElectronGoogleOAuth2
    * @param {string} clientId - Google Client ID
    * @param {string} clientSecret - Google Client Secret
    * @param {string[]} scopes - Google scopes. 'profile' and 'email' will always be present
-   * @param {Partial<ElectronGoogleOAuth2Options>} options
+   * @param {ElectronGoogleOAuth2Options} options - successRedirectURL is required
    */
   constructor(
     clientId: string,
     clientSecret: string,
     scopes: string[],
-    options: Partial<ElectronGoogleOAuth2Options> = defaultElectronGoogleOAuth2Options,
+    options: ElectronGoogleOAuth2Options,
   ) {
     super();
+    // JavaScript callers do not get the type check, so check at runtime too.
+    if (!options?.successRedirectURL) {
+      throw new TypeError('options.successRedirectURL is required');
+    }
     // Force fetching id_token if not provided
     if (!scopes.includes('profile')) scopes.push('profile');
     if (!scopes.includes('email')) scopes.push('email');
@@ -83,11 +96,16 @@ class ElectronGoogleOAuth2 extends EventEmitter {
    * @returns {string}
    */
   generateAuthUrl(forceAddSession: boolean = false) {
-    let url = this.oauth2Client.generateAuthUrl({
+    const authUrlOptions: GenerateAuthUrlOpts = {
       access_type: 'offline', // 'online' (default) or 'offline' (gets refresh_token)
       scope: this.scopes,
       redirect_uri: `http://127.0.0.1:${this.options.loopbackInterfaceRedirectionPort}/callback`
-    });
+    };
+    // Do not send an undefined prompt. The query string would get an empty `prompt=`.
+    if (this.options.prompt) {
+      authUrlOptions.prompt = this.options.prompt;
+    }
+    let url = this.oauth2Client.generateAuthUrl(authUrlOptions);
 
     if (forceAddSession) {
       const qs = stringify({ continue: url });
@@ -147,13 +165,19 @@ class ElectronGoogleOAuth2 extends EventEmitter {
       // refocus on the window
       if (!BW) {
         if (process.type === 'renderer') {
-          let { remote } = await import('electron');
-          if (!remote) {
-            remote = await import('@electron/remote');
+          // Electron 14 removed the remote module. Older versions still have it.
+          // Use require() for both modules. A native import() does not see the
+          // computed CommonJS exports of @electron/remote.
+          const electronModule = require('electron') as typeof import('electron') & {
+            remote?: RemoteModule,
+          };
+          if (electronModule.remote) {
+            BW = electronModule.remote.BrowserWindow;
+          } else {
+            BW = (require('@electron/remote') as RemoteModule).BrowserWindow;
           }
-          BW = remote.BrowserWindow;
         } else {
-          BW = (await import('electron')).BrowserWindow;
+          BW = (require('electron') as typeof import('electron')).BrowserWindow;
         }
       }
 

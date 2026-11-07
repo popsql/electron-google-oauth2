@@ -6,6 +6,33 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [Unreleased]
 
+## [3.0.0] - 2026-11-06
+### Breaking changes
+- Upgrade `google-auth-library` from 5 to 11. The tokens and the `Credentials` type
+  come from the new version.
+- Raise the Node.js requirement from 8 to 22. `google-auth-library` 11 and `gaxios` 8
+  need Node.js 22 or later. In Electron, use a version that bundles Node.js 22 or
+  later (Electron 37 and later).
+- The package still ships CommonJS in `lib/`.
+- `options.successRedirectURL` is now required. The old default pointed to
+  `getstation.com`, which now redirects to an unrelated site. The constructor
+  throws a `TypeError` if the option is missing or empty.
+- `defaultElectronGoogleOAuth2Options` no longer has `successRedirectURL`.
+
+### Added
+- `options.prompt` sets the Google `prompt` parameter on the auth URL, for example
+  `consent` to always get a refresh token.
+
+### Changed
+- Import `Credentials` from the root of `google-auth-library` instead of a deep path.
+- TypeScript 6, `@types/node` 24 and Electron 45 for the build.
+- `main` and `types` name the full file paths. A `files` list replaces `.npmignore`,
+  so the package ships only `lib/`, the changelog, the readme and the license.
+
+### Fixed
+- Remove `gtoken`, `google-p12-pem` and `node-forge` 0.10, which had high advisories.
+  `json-bigint` stays at 1.0.0 through `gcp-metadata` 9, which is not affected.
+
 ## [2.2.1] - 2023-04-27
 ### Fixed
 - Remove `@electron/remote` as peerDependency as it's not required if using old version of `electron`
