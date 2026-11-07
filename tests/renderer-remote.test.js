@@ -16,6 +16,7 @@ test('the renderer path takes BrowserWindow from the CommonJS remote module', as
   const port = await getFreePort();
   const client = new ElectronGoogleOAuth2('client-id', 'client-secret', ['scope-a'], {
     loopbackInterfaceRedirectionPort: port,
+    successRedirectURL: 'https://example.com/success',
   });
   stubTokenEndpoint(client);
   const originalProcessType = process.type;

@@ -9,6 +9,7 @@ const { getFreePort, requestCallback } = require('./helpers.cjs');
 function createClient(port, options = {}) {
   return new ElectronGoogleOAuth2('client-id', 'client-secret', ['scope-a'], {
     loopbackInterfaceRedirectionPort: port,
+    successRedirectURL: 'https://example.com/success',
     ...options,
   });
 }

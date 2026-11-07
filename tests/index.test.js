@@ -17,9 +17,13 @@ const {
 
 const CLIENT_ID = 'client-id';
 const CLIENT_SECRET = 'client-secret';
+const SUCCESS_REDIRECT_URL = 'https://example.com/success';
 
 function createClient(scopes = ['scope-a'], options = {}) {
-  return new ElectronGoogleOAuth2(CLIENT_ID, CLIENT_SECRET, scopes, options);
+  return new ElectronGoogleOAuth2(CLIENT_ID, CLIENT_SECRET, scopes, {
+    successRedirectURL: SUCCESS_REDIRECT_URL,
+    ...options,
+  });
 }
 
 function readAuthUrl(authUrl) {
@@ -36,9 +40,23 @@ test('constructor adds the profile and email scopes', () => {
   assert.deepEqual(client.scopes, ['scope-a', 'profile', 'email']);
 });
 
+test('constructor requires the successRedirectURL option', () => {
+  const expectedError = { name: 'TypeError', message: 'options.successRedirectURL is required' };
+
+  assert.throws(() => new ElectronGoogleOAuth2(CLIENT_ID, CLIENT_SECRET, ['scope-a']), expectedError);
+  assert.throws(() => new ElectronGoogleOAuth2(CLIENT_ID, CLIENT_SECRET, ['scope-a'], {}), expectedError);
+  assert.throws(
+    () => new ElectronGoogleOAuth2(CLIENT_ID, CLIENT_SECRET, ['scope-a'], { successRedirectURL: '' }),
+    expectedError,
+  );
+});
+
 test('constructor merges the options with the defaults', () => {
   const defaults = createClient();
-  assert.deepEqual(defaults.options, defaultElectronGoogleOAuth2Options);
+  assert.deepEqual(defaults.options, {
+    ...defaultElectronGoogleOAuth2Options,
+    successRedirectURL: SUCCESS_REDIRECT_URL,
+  });
 
   const client = createClient(['scope-a'], {
     loopbackInterfaceRedirectionPort: 43210,
@@ -112,7 +130,7 @@ test('openAuthWindowAndGetTokens exchanges the code and stores the tokens', asyn
   assert.equal(state.openedUrls.length, 1);
   assert.equal(readAuthUrl(state.openedUrls[0]).searchParams.get('access_type'), 'offline');
   assert.equal(callbackResponse.statusCode, 302);
-  assert.equal(callbackResponse.headers.location, defaultElectronGoogleOAuth2Options.successRedirectURL);
+  assert.equal(callbackResponse.headers.location, SUCCESS_REDIRECT_URL);
 
   assert.equal(requests.length, 1);
   assert.equal(requests[0].method, 'POST');

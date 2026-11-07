@@ -14,6 +14,10 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
   need Node.js 22 or later. In Electron, use a version that bundles Node.js 22 or
   later (Electron 37 and later).
 - The package still ships CommonJS in `lib/`.
+- `options.successRedirectURL` is now required. The old default pointed to
+  `getstation.com`, which now redirects to an unrelated site. The constructor
+  throws a `TypeError` if the option is missing or empty.
+- `defaultElectronGoogleOAuth2Options` no longer has `successRedirectURL`.
 
 ### Changed
 - Import `Credentials` from the root of `google-auth-library` instead of a deep path.
